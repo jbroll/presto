@@ -135,6 +135,7 @@ public class DistributedQueryRunner
             long start = nanoTime();
             discoveryServer = new TestingDiscoveryServer(environment);
             closer.register(() -> closeUnchecked(discoveryServer));
+            log.info("Created TestingDiscoveryServer with %s", discoveryServer.getBaseUrl());
             log.info("Created TestingDiscoveryServer in %s", nanosSince(start).convertToMostSuccinctTimeUnit());
 
             ImmutableList.Builder<TestingPrestoServer> servers = ImmutableList.builder();

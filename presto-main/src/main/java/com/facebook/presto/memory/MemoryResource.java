@@ -35,6 +35,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 /**
  * Manages memory pools on this worker node
  */
+//@Logged
 @Path("/v1/memory")
 public class MemoryResource
 {

@@ -298,6 +298,8 @@ public class ServerMainModule
 
         // task execution
         jaxrsBinder(binder).bind(TaskResource.class);
+        jaxrsBinder(binder).bind(LoggingRequestFilter.class);
+        jaxrsBinder(binder).bind(LoggingResponseFilter.class);
         newExporter(binder).export(TaskResource.class).withGeneratedName();
         jaxrsBinder(binder).bind(TaskExecutorResource.class);
         newExporter(binder).export(TaskExecutorResource.class).withGeneratedName();

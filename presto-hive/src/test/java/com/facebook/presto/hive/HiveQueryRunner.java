@@ -37,6 +37,7 @@ import org.joda.time.DateTimeZone;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -114,12 +115,16 @@ public final class HiveQueryRunner
     public static DistributedQueryRunner createQueryRunner(
             Iterable<TpchTable<?>> tables,
             Map<String, String> extraProperties,
-            Map<String, String> extraCoordinatorProperties,
+            Map<String, String> extraCoordinatorPropertiesXXX,
             String security,
             Map<String, String> extraHiveProperties,
             Optional<Path> baseDataDir)
             throws Exception
     {
+        Map<String, String> extraCoordinatorProperties = new HashMap<>();
+        extraCoordinatorProperties.put("coordinator", "true");
+        extraCoordinatorProperties.put("node-scheduler.include-coordinator", "false");
+
         assertEquals(DateTimeZone.getDefault(), TIME_ZONE, "Timezone not configured correctly. Add -Duser.timezone=America/Bahia_Banderas to your JVM arguments");
         setupLogging();
 
@@ -131,7 +136,7 @@ public final class HiveQueryRunner
 
         DistributedQueryRunner queryRunner =
                 DistributedQueryRunner.builder(createSession(Optional.of(new SelectedRole(ROLE, Optional.of("admin")))))
-                        .setNodeCount(4)
+                        .setNodeCount(0)
                         .setExtraProperties(systemProperties)
                         .setCoordinatorProperties(extraCoordinatorProperties)
                         .setBaseDataDir(baseDataDir)

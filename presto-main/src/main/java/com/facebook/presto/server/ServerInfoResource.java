@@ -40,6 +40,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
+//@Logged
 @Path("/v1/info")
 public class ServerInfoResource
 {
