@@ -53,7 +53,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ListenableFuture;
 import io.airlift.units.DataSize;
 import io.airlift.units.Duration;
-import org.joda.time.DateTime;
 import org.weakref.jmx.Flatten;
 import org.weakref.jmx.Managed;
 import org.weakref.jmx.Nested;
@@ -472,12 +471,12 @@ public class SqlTaskManager
 
     public void removeOldTasks()
     {
-        DateTime oldestAllowedTask = DateTime.now().minus(infoCacheTime.toMillis());
+        long oldestAllowedTask = System.currentTimeMillis() - infoCacheTime.toMillis();
         for (TaskInfo taskInfo : filter(transform(tasks.asMap().values(), SqlTask::getTaskInfo), notNull())) {
             TaskId taskId = taskInfo.getTaskId();
             try {
-                DateTime endTime = taskInfo.getStats().getEndTime();
-                if (endTime != null && endTime.isBefore(oldestAllowedTask)) {
+                long endTime = taskInfo.getStats().getEndTime();
+                if (endTime != 0 && endTime < oldestAllowedTask) {
                     tasks.asMap().remove(taskId);
                 }
             }
@@ -489,8 +488,8 @@ public class SqlTaskManager
 
     public void failAbandonedTasks()
     {
-        DateTime now = DateTime.now();
-        DateTime oldestAllowedHeartbeat = now.minus(clientTimeout.toMillis());
+        long now = System.currentTimeMillis();
+        long oldestAllowedHeartbeat = now - clientTimeout.toMillis();
         for (SqlTask sqlTask : tasks.asMap().values()) {
             try {
                 TaskInfo taskInfo = sqlTask.getTaskInfo();
@@ -498,8 +497,8 @@ public class SqlTaskManager
                 if (taskStatus.getState().isDone()) {
                     continue;
                 }
-                DateTime lastHeartbeat = taskInfo.getLastHeartbeat();
-                if (lastHeartbeat != null && lastHeartbeat.isBefore(oldestAllowedHeartbeat)) {
+                long lastHeartbeat = taskInfo.getLastHeartbeat();
+                if (lastHeartbeat != 0 && lastHeartbeat < oldestAllowedHeartbeat) {
                     log.info("Failing abandoned task %s", taskInfo.getTaskId());
                     sqlTask.failed(new PrestoException(ABANDONED_TASK, format("Task %s has not been accessed since %s: currentTime %s", taskInfo.getTaskId(), lastHeartbeat, now)));
                 }

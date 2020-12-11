@@ -24,6 +24,7 @@ import com.facebook.presto.operator.TaskStats;
 import com.facebook.presto.spi.QueryId;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
+import org.joda.time.DateTime;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -203,7 +204,7 @@ public class GcStatusMonitor
                                 task.getQueryContext().getQueryId().toString(),
                                 task.getTaskId().toString(),
                                 taskStatus.getState().toString(),
-                                taskStats.getCreateTime().toString(),
+                                new DateTime(taskStats.getCreateTime()).toString(),
                                 Long.toString(taskStats.getUserMemoryReservationInBytes()),
                                 Long.toString(taskStats.getSystemMemoryReservationInBytes()),
                                 Long.toString(taskIOStats.getInputDataSize().getTotalCount()),

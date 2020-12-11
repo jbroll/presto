@@ -43,7 +43,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import io.airlift.units.DataSize;
-import org.joda.time.DateTime;
 
 import javax.annotation.Nullable;
 
@@ -81,7 +80,7 @@ public class SqlTask
     private final SqlTaskExecutionFactory sqlTaskExecutionFactory;
     private final TaskExchangeClientManager taskExchangeClientManager;
 
-    private final AtomicReference<DateTime> lastHeartbeat = new AtomicReference<>(DateTime.now());
+    private final AtomicReference<Long> lastHeartbeat = new AtomicReference<>(System.currentTimeMillis());
     private final AtomicLong nextTaskInfoVersion = new AtomicLong(TaskStatus.STARTING_VERSION);
 
     private final AtomicReference<TaskHolder> taskHolderReference = new AtomicReference<>(new TaskHolder());
@@ -218,7 +217,7 @@ public class SqlTask
 
     public void recordHeartbeat()
     {
-        lastHeartbeat.set(DateTime.now());
+        lastHeartbeat.set(System.currentTimeMillis());
     }
 
     public TaskInfo getTaskInfo()
@@ -314,8 +313,8 @@ public class SqlTask
             return taskExecution.getTaskContext().getTaskStats();
         }
         // if the task completed without creation, set end time
-        DateTime endTime = taskStateMachine.getState().isDone() ? DateTime.now() : null;
-        return new TaskStats(taskStateMachine.getCreatedTime(), endTime);
+        long endTime = taskStateMachine.getState().isDone() ? System.currentTimeMillis() : 0;
+        return new TaskStats(taskStateMachine.getCreatedTime().getMillis(), endTime);
     }
 
     private MetadataUpdates getMetadataUpdateRequests(TaskHolder taskHolder)

@@ -701,7 +701,7 @@ public class PrestoSparkTaskExecutorFactory
             return new TaskInfo(
                     taskId,
                     taskStatus,
-                    DateTime.now(),
+                    System.currentTimeMillis(),
                     outputBufferInfo,
                     ImmutableSet.of(),
                     taskStats,

@@ -16,21 +16,19 @@ package com.facebook.presto.operator;
 import com.facebook.airlift.json.JsonCodec;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.joda.time.DateTime;
 import org.testng.annotations.Test;
 
 import static com.facebook.presto.operator.TestPipelineStats.assertExpectedPipelineStats;
-import static org.joda.time.DateTimeZone.UTC;
 import static org.testng.Assert.assertEquals;
 
 public class TestTaskStats
 {
     private static final TaskStats EXPECTED = new TaskStats(
-            new DateTime(1),
-            new DateTime(2),
-            new DateTime(100),
-            new DateTime(101),
-            new DateTime(3),
+            1,
+            2,
+            100,
+            101,
+            3,
             4,
             5,
 
@@ -86,11 +84,11 @@ public class TestTaskStats
 
     public static void assertExpectedTaskStats(TaskStats actual)
     {
-        assertEquals(actual.getCreateTime(), new DateTime(1, UTC));
-        assertEquals(actual.getFirstStartTime(), new DateTime(2, UTC));
-        assertEquals(actual.getLastStartTime(), new DateTime(100, UTC));
-        assertEquals(actual.getLastEndTime(), new DateTime(101, UTC));
-        assertEquals(actual.getEndTime(), new DateTime(3, UTC));
+        assertEquals(actual.getCreateTime(), 1);
+        assertEquals(actual.getFirstStartTime(), 2);
+        assertEquals(actual.getLastStartTime(), 100);
+        assertEquals(actual.getLastEndTime(), 101);
+        assertEquals(actual.getEndTime(), 3);
         assertEquals(actual.getElapsedTimeInNanos(), 4);
         assertEquals(actual.getQueuedTimeInNanos(), 5);
 

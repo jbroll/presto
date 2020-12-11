@@ -469,19 +469,19 @@ public class QueryMonitor
                 for (TaskInfo taskInfo : stage.getLatestAttemptExecutionInfo().getTasks()) {
                     TaskStats taskStats = taskInfo.getStats();
 
-                    DateTime firstStartTime = taskStats.getFirstStartTime();
-                    if (firstStartTime != null) {
-                        firstTaskStartTime = Math.min(firstStartTime.getMillis(), firstTaskStartTime);
+                    long firstStartTime = taskStats.getFirstStartTime();
+                    if (firstStartTime != 0) {
+                        firstTaskStartTime = Math.min(firstStartTime, firstTaskStartTime);
                     }
 
-                    DateTime lastStartTime = taskStats.getLastStartTime();
-                    if (lastStartTime != null) {
-                        lastTaskStartTime = max(lastStartTime.getMillis(), lastTaskStartTime);
+                    long lastStartTime = taskStats.getLastStartTime();
+                    if (lastStartTime != 0) {
+                        lastTaskStartTime = max(lastStartTime, lastTaskStartTime);
                     }
 
-                    DateTime endTime = taskStats.getEndTime();
-                    if (endTime != null) {
-                        lastTaskEndTime = max(endTime.getMillis(), lastTaskEndTime);
+                    long endTime = taskStats.getEndTime();
+                    if (endTime != 0) {
+                        lastTaskEndTime = max(endTime, lastTaskEndTime);
                     }
                 }
             }
